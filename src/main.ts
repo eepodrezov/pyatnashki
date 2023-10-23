@@ -1,25 +1,11 @@
 import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import { getValidView } from './views/get-valid-view.ts'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Решатель пятнашек</h1>
-    <p>Проект полностью ванильный.</br> Приложение на Vite используется исключительно для удобства написания кода и использования Typescript. </br> Весь функционал на чистом JS без библиотек</p>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+document.querySelector<HTMLDivElement>('#app')!.innerHTML = getValidView(window.location.pathname)
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const selectSubmitBtn = document.getElementById('selectSubmit');
+const sb = document.getElementById('inputOptions') as HTMLSelectElement
+function setSelectedOptionToLocalStorage(value:string): void {
+    localStorage.setItem('selectedValue', value)
+}
+selectSubmitBtn?.addEventListener('click', () => setSelectedOptionToLocalStorage(sb.value))
