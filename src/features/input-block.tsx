@@ -1,5 +1,7 @@
 import { useForm, SubmitHandler } from "react-hook-form"
-
+import { useAtom } from "jotai"
+import { selectedValueAtom } from "../views"
+import { useEffect, useMemo } from "react"
 
 type Inputs = {
   [k:string]: string
@@ -10,21 +12,43 @@ export function InputBlock() {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
+    setValue,
+    
   } = useForm<Inputs>()
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  const [selectedValue, setSelectedValue] = useAtom(selectedValueAtom)
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setSelectedValue(Object.values(data).join(''))
+  }
+  const selectedValueArr = selectedValue.split('')
 
-
-  console.log(watch("example")) // watch input value by passing the name of it
-
+  useEffect(() => {
+    selectedValueArr.forEach((value,i) => setValue('f' + i, value))
+  },[selectedValue])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {Array.from({ length: 15 }).map((_,i) => (
-        <input defaultValue="test" {...register('f' + i)} />
-      ))}
-      <input type="submit" />
-    </form>
+    <div
+      className="flex flex-col items-center gap-10"
+    >
+      <h1>Введите данных полей</h1>
+      <form 
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-3"
+      >
+        <div
+         className="grid grid-cols-4 grid-rows-4 gap-3"
+        >
+          {Array.from({ length: 16 }).map((_,i) =>  
+            <input 
+              key={'input' + i}
+              type="text"
+              {...register('f' + i)}  
+              className="w-[40px] h-[40px] p-2"
+              defaultValue={selectedValueArr?.[i]}
+            />
+          )}
+        </div>
+        <button type="submit">Сохранить поля</button>
+      </form>
+    </div>
   )
 }
