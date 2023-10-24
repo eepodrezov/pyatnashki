@@ -7,6 +7,9 @@ export const selectedValueAtom = atom<string>('')
 
 export const InputView = () => {
   const selectedValue = useAtomValue(selectedValueAtom)
+  function handleClickSolve() {
+    localStorage.setItem('selectedValue', selectedValue)
+  }
   return (
     <div>
       <BackButton />
@@ -14,7 +17,7 @@ export const InputView = () => {
       <Seperator text='ИЛИ'/>
       <SelectBlock />
       {selectedValue && 
-        <button className="mt-5">
+        <button onClick={handleClickSolve} className="mt-5">
           <a href="/result">Посчитать решение</a>
         </button>
       }

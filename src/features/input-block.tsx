@@ -1,7 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form"
 import { useAtom } from "jotai"
 import { selectedValueAtom } from "../views"
-import { useEffect, useMemo } from "react"
+import { useEffect } from "react"
+import cn from 'classnames'
 
 type Inputs = {
   [k:string]: string
@@ -13,11 +14,11 @@ export function InputBlock() {
     register,
     handleSubmit,
     setValue,
-    
+    formState: { isDirty }
   } = useForm<Inputs>()
   const [selectedValue, setSelectedValue] = useAtom(selectedValueAtom)
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    setSelectedValue(Object.values(data).join(''))
+    setSelectedValue(Object.values(data).join('').toUpperCase())
   }
   const selectedValueArr = selectedValue.split('')
 
@@ -47,7 +48,14 @@ export function InputBlock() {
             />
           )}
         </div>
-        <button type="submit">Сохранить поля</button>
+        <button 
+          type="submit"
+          className={cn({
+            'opacity-0': !isDirty
+          })}
+        >
+          Сохранить поля
+        </button>
       </form>
     </div>
   )
